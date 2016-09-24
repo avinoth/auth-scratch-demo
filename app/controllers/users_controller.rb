@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  require 'json_web_token'
 
   def create
     user = User.new(user_params)
