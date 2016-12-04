@@ -13,7 +13,7 @@ class User < ApplicationRecord
   end
 
   def generate_confirmation_instructions
-    self.confirmation_token = SecureRandom.hex(10)
+    self.confirmation_token = generate_token
     self.confirmation_sent_at = Time.now.utc
   end
 
@@ -26,4 +26,27 @@ class User < ApplicationRecord
     self.confirmed_at = Time.now.utc
     save
   end
+
+  def generate_password_token!
+    self.reset_password_token = generate_token
+    self.reset_password_sent_at = Time.now.utc
+    save!
+  end
+
+  def password_token_valid?
+    (self.reset_password_sent_at + 24.hours) > Time.now.utc
+  end
+
+  def reset_password!(password)
+    self.reset_password_token = nil
+    self.password = password
+    save
+  end
+
+  private
+
+  def generate_token
+    SecureRandom.hex(10)
+  end
+
 end
