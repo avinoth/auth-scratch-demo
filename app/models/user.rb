@@ -24,7 +24,7 @@ class User < ApplicationRecord
   def mark_as_confirmed!
     self.confirmation_token = nil
     self.confirmed_at = Time.now.utc
-    save
+    save!
   end
 
   def generate_password_token!
@@ -41,6 +41,23 @@ class User < ApplicationRecord
     self.reset_password_token = nil
     self.password = password
     save
+  end
+
+  def update_new_email!(email)
+    self.unconfirmed_email = email
+    self.generate_confirmation_instructions
+    save
+  end
+
+  def self.email_used?(email)
+    existing_user = find_by("email = ?", email)
+
+    if existing_user.present?
+      return true
+    else
+      waiting_for_confirmation = find_by("unconfirmed_email = ?", email)
+      return waiting_for_confirmation.present? && waiting_for_confirmation.confirmation_token_valid?
+    end
   end
 
   private

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     collection do
       post 'confirm'
       post 'login'
+      post 'update'
     end
   end
 
