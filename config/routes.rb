@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
 
-  resources :users, only: :create do
+  resources :users, only: [:create, :update] do
     collection do
       post 'confirm'
       post 'login'
-      post 'update'
+      post 'email_update'
     end
   end
 

@@ -60,6 +60,12 @@ class User < ApplicationRecord
     end
   end
 
+  def update_new_email!
+    self.email = self.unconfirmed_email
+    self.unconfirmed_email = nil
+    self.mark_as_confirmed!
+  end
+
   private
 
   def generate_token
