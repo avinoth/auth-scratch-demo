@@ -31,4 +31,17 @@ class PasswordsController < ApplicationController
     end
   end
 
+  def update
+    if !params[:password].present?
+      render json: {error: 'Password not present'}, status: :unprocessable_entity
+      return
+    end
+
+    if current_user.reset_password(params[:password])
+      render json: {status: 'ok'}, status: :ok
+    else
+      render json: {errors: current_user.errors.full_messages}, status: :unprocessable_entity
+    end
+  end
+
 end
